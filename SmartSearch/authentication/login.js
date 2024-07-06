@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, StatusBar } from 'react-native';
 import { Bacgroundspecial } from './register';
 
-const LoginScreen = () => {
+const LoginScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
     <Bacgroundspecial/>
@@ -17,12 +17,12 @@ const LoginScreen = () => {
         <Text style={styles.forgotPassword}>Forgot Password</Text>
       </TouchableOpacity>
       
-      <TouchableOpacity style={styles.loginButton}>
+      <TouchableOpacity style={styles.loginButton}  onPress={() => navigation.navigate('Dashboard')} >
         <Text style={styles.loginButtonText}>Login</Text>
       </TouchableOpacity>
       
       <Text style={styles.registerText}>
-        Don’t have an account? <Text style={styles.registerLink}>Register</Text>
+        Don’t have an account?<TouchableOpacity onPress={() => navigation.navigate('Signup')} ><Text style={styles.registerLink}>Register</Text></TouchableOpacity> 
       </Text>
       <Bacgroundspecial/>
     </View>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet, ScrollView } from 'react-native';
 
-const HomeScreen = () => {
+const HomeScreen = ({navigation}) => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.sidebar}>
@@ -28,10 +28,10 @@ const HomeScreen = () => {
         </TouchableOpacity>
       </View>
       <View style={styles.mainContent}>
-        <Text style={styles.title}>SmartSearch</Text>
-        <Text style={styles.subtitle}>HI Messi</Text>
+        <Text style={styles.title}>SMARTSEARCH</Text>
+        <Text style={styles.subtitle}>HI <Text style={  {color:'#A5D6A7'}}>Messi</Text></Text>
         <Image source={require('../assets/profile.png')} style={styles.profileImage} />
-        <Text style={styles.welcomeText}>welcome on Smart Search</Text>
+        <Text style={styles.welcomeText}>WELCOME ON SMARTSEARCH</Text>
         <Text style={styles.descriptionText}>we can search whatever you want here (missing items, discovery items)</Text>
         <TouchableOpacity style={styles.button}>
           <Image source={require('../assets/camera.png')} style={styles.buttonIcon} />
@@ -39,7 +39,7 @@ const HomeScreen = () => {
         </TouchableOpacity>
         <TouchableOpacity style={styles.button}>
           <Image source={require('../assets/cross.png')} style={styles.buttonIcon} />
-          <Text style={styles.buttonText}>Add a photo to search</Text>
+          <Text style={styles.buttonText} onPress={() => navigation.navigate('search')} >Add a photo to search</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button}>
           <Image source={require('../assets/time.png')} style={styles.buttonIcon} />
@@ -64,6 +64,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#A5D6A7',
     alignItems: 'center',
     paddingVertical: 2,
+
+    position:"absolute"
   },
   iconButton: {
     marginBottom: 20,
@@ -73,8 +75,9 @@ const styles = StyleSheet.create({
     height: 30,
   },
   mainContent: {
-marginTop:0,
+marginTop:40,
 justifyContent:"center",
+
 
 
   },
@@ -89,6 +92,7 @@ justifyContent:"center",
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 10,
+    
   },
   profileImage: {
     width: 220,
@@ -102,10 +106,12 @@ justifyContent:"center",
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 10,
+    color:'#A5D6A7'
   },
   descriptionText: {
     fontSize: 16,
     textAlign: 'center',
+    color:'#A5D6A7'
 
   },
   button: {
@@ -114,7 +120,7 @@ justifyContent:"center",
     backgroundColor: '#A5D6A7',
     padding: 15,
     borderRadius: 10,
-    marginBottom: 5,
+    marginBottom: 15,
   },
   buttonIcon: {
     width: 24,

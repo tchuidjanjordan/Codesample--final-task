@@ -1,166 +1,207 @@
-
 import React, { useState } from 'react';
-import { Button, Image, View, TextInput, StyleSheet } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet, Button, ScrollView } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import axios from 'axios';
+import { Bacgroundspecial } from '../authentication/register';
 
-export default function CollectItem() {
-  const [imageUri, setImageUri] = useState(null);
-  const [InfoID, setInfoID] = useState('');
-  const [Name, setName] = useState('');
-  const [Status, setStatus] = useState('');
-  const [Description, setDescription] = useState('');
-  const [Type, setType] = useState('');
+const SmartSearch = () => {
+  const [selectedFile, setSelectedFile] = useState(null);
 
-  const openImagePicker = async () => {
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
-    if (permissionResult.granted === false) {
-      alert('Permission to access the camera roll is required!');
+  
+  const pickImage = async () => {
+    // Ask the user for the permission to access the media library
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      alert('Sorry, we need camera roll permissions to make this work!');
       return;
     }
 
-    const pickerResult = await ImagePicker.launchImageLibraryAsync();
-    if (!pickerResult.cancelled) {
-      setImageUri(pickerResult.uri);
+    // Open the image picker
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setSelectedFile(result.assets[0]);
     }
   };
 
-  const sendImage = async () => {
 
-    
 
-openImagePicker()
-    if (!imageUri) {
+  const uploadImage = async () => {
+    if (!selectedFile) {
       alert('Please select an image first');
       return;
     }
 
     const formData = new FormData();
-    formData.append('picture', {
-      uri: imageUri,
-      name: 'photo.jpg',
-      type: 'image/jpeg',
+    formData.append('photo', {
+      uri: selectedFile.uri,
+      name: selectedFile.uri.split('/').pop(),
+      type: 'image/jpeg', // You might need to adjust the type based on the actual image type
     });
-    formData.append('InfoID', InfoID);
-    formData.append('Name', Name);
-    formData.append('Status', Status);
-    formData.append('Description', Description);
-    formData.append('Type', Type);
 
-    try {
-      const response = await axios.post('http://localhost:4520/upload', formData, {
+    try {/*
+    await axios.post(
+      "http://localhost:4520/upload",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    ) */
+      const response = await axios.post('http://localhost:4520/upload',
+   
+         formData,{
         headers: {
           'Content-Type': 'multipart/form-data',
-        },
-      });
-      console.log(response.data);
-      alert('Image uploaded successfully');
+        },}
+      );
+
+      if (response.ok) {
+        alert('Image uploaded successfully');
+      } else {
+        alert('Failed to upload image');
+      }
     } catch (error) {
-      console.error(error);
-      alert('Image upload failed');
+      console.error('Error uploading image:', error);
+      alert('Error uploading image');
     }
   };
 
   return (
-    <View style={styles.container}>
-      <Button title="Pick an image from gallery" onPress={openImagePicker} />
-      {imageUri && <Image source={{ uri: imageUri }} style={styles.image} />}
-      <TextInput
-        style={styles.input}
-        placeholder="InfoID"
-        value={InfoID}
-        onChangeText={setInfoID}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Name"
-        value={Name}
-        onChangeText={setName}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Status"
-        value={Status}
-        onChangeText={setStatus}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Description"
-        value={Description}
-        onChangeText={setDescription}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Type"
-        value={Type}
-        onChangeText={setType}
-      />
-      <Button title="Send Image" onPress={sendImage} />
-    </View>
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <View style={styles.container}>
+        <Bacgroundspecial />
+        <Text style={styles.headerText}>Smart Search</Text>
+        <Image source={require("../assets/profile.png")} style={styles.image} />
+        <Text style={styles.greeting}>HI Messi</Text>
+        <Text style={styles.welcomeText}>
+          welcome on Smart Search
+          {'\n'}
+          we can search whatever you want here
+          {'\n'}
+          (missing items, discovery items)
+        </Text>
+        <View style={styles.checkboxContainer}>
+          <Text style={styles.checkboxText}>Is the object lost?</Text>
+        </View>
+        <Text style={styles.uploadText}>Upload your image here</Text>
+        <TouchableOpacity style={styles.dragDropContainer} onPress={pickImage}>
+          <Text style={styles.dragDropText}>Drag&Drop files here</Text>
+          <Text style={styles.orText}>or</Text>
+          <Button title="Browse Files" onPress={pickImage} />
+        </TouchableOpacity>
+        <View style={styles.fileManagementContainer}>
+          <Text style={styles.fileManagementText}>file management</Text>
+          <Text style={styles.filesText}>Picture</Text>
+          {selectedFile && (
+            <Image source={{ uri: selectedFile.uri }} style={styles.uploadedImage} />
+          )}
+        </View>
+        <TouchableOpacity style={styles.uploadButton} onPress={uploadImage}>
+          <Text style={styles.buttonText}>Upload to Search</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.cancelButton} >
+          <Text style={styles.buttonText}>Cancel</Text>
+        </TouchableOpacity>
+      </View>
+    </ScrollView>
   );
-}
+};
 
 const styles = StyleSheet.create({
+  scrollContainer: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    backgroundColor: '#FFFBF1',
+  },
   container: {
     flex: 1,
+    padding: 20,
     alignItems: 'center',
-    justifyContent: 'center',
-    padding: 16,
+    backgroundColor: '#FFFBF1',
+  },
+  uploadedImage: {
+    width: 100,
+    height: 100,
+    marginTop: 10,
+  },
+  headerText: {
+    fontSize: 24,
+    fontWeight: 'bold',
   },
   image: {
-    width: 200,
-    height: 200,
-    margin: 16,
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    marginVertical: 20,
   },
-  input: {
-    width: '100%',
-    padding: 8,
+  greeting: {
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  welcomeText: {
+    textAlign: 'center',
+    marginVertical: 10,
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 10,
+  },
+  checkboxText: {
+    marginLeft: 10,
+  },
+  uploadText: {
+    marginVertical: 10,
+  },
+  dragDropContainer: {
     borderWidth: 1,
     borderColor: '#ccc',
-    marginBottom: 16,
-    borderRadius: 4,
+    padding: 20,
+    alignItems: 'center',
+    marginVertical: 10,
+  },
+  dragDropText: {
+    marginBottom: 10,
+  },
+  orText: {
+    marginVertical: 5,
+  },
+  fileManagementContainer: {
+    backgroundColor: '#e0e0e0',
+    padding: 10,
+    marginVertical: 10,
+    width: '100%',
+  },
+  fileManagementText: {
+    fontWeight: 'bold',
+  },
+  filesText: {
+    marginTop: 10,
+  },
+  uploadButton: {
+    backgroundColor: '#4CAF50',
+    padding: 15,
+    alignItems: 'center',
+    marginVertical: 10,
+    width: '100%',
+  },
+  cancelButton: {
+    backgroundColor: '#f44336',
+    padding: 15,
+    alignItems: 'center',
+    marginVertical: 10,
+    width: '100%',
+  },
+  buttonText: {
+    color: '#ffffff',
   },
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function KApp() {
-  const [imageUri, setImageUri] = useState(null);
-
-  const openImagePicker = async () => {
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-    if (permissionResult.granted === false) {
-      alert('Permission to access the camera roll is required!');
-      return;
-    }
-
-    const pickerResult = await ImagePicker.launchImageLibraryAsync();
-    if (!pickerResult.cancelled) {
-      setImageUri(pickerResult.uri);
-    }
-    alert("The image with:  Is been picked succefully")
-  };
-
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Button title="Pick an image from gallery" onPress={openImagePicker} />
-      {imageUri && <Image source={{ uri: imageUri }} style={{ width: 200, height: 200 }} />}
-    </View>
-  );
-}
+export default SmartSearch;
