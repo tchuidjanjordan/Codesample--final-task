@@ -77,11 +77,11 @@ const SmartSearch = () => {
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
         <Bacgroundspecial />
-        <Text style={styles.headerText}>Smart Search</Text>
+        <Text style={styles.headerText}>SMART<Text style={{color:"white"}}>SEARCH</Text></Text>
         <Image source={require("../assets/profile.png")} style={styles.image} />
-        <Text style={styles.greeting}>HI Messi</Text>
+        <Text style={styles.greeting}>HI MESSI</Text>
         <Text style={styles.welcomeText}>
-          welcome on Smart Search
+          Welcome on Smart Search
           {'\n'}
           we can search whatever you want here
           {'\n'}
@@ -97,7 +97,7 @@ const SmartSearch = () => {
           <Button title="Browse Files" onPress={pickImage} />
         </TouchableOpacity>
         <View style={styles.fileManagementContainer}>
-          <Text style={styles.fileManagementText}>file management</Text>
+          <Text style={styles.fileManagementText}>File Management</Text>
           <Text style={styles.filesText}>Picture</Text>
           {selectedFile && (
             <Image source={{ uri: selectedFile.uri }} style={styles.uploadedImage} />
@@ -134,6 +134,7 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 24,
     fontWeight: 'bold',
+    color:"#8ed699"
   },
   image: {
     width: 150,
@@ -144,10 +145,13 @@ const styles = StyleSheet.create({
   greeting: {
     fontSize: 24,
     fontWeight: 'bold',
+    
   },
   welcomeText: {
     textAlign: 'center',
     marginVertical: 10,
+    color:"#8ed69c",
+    fontSize:20
   },
   checkboxContainer: {
     flexDirection: 'row',
@@ -156,6 +160,8 @@ const styles = StyleSheet.create({
   },
   checkboxText: {
     marginLeft: 10,
+    fontSize:18,
+    fontWeight:"bold"
   },
   uploadText: {
     marginVertical: 10,
@@ -193,7 +199,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   cancelButton: {
-    backgroundColor: '#f44336',
+    backgroundColor: '#2196F4',
     padding: 15,
     alignItems: 'center',
     marginVertical: 10,

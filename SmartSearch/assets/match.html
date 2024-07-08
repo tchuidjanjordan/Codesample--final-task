@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OpenCV.js Image Matching</title>
+    <script async src="https://docs.opencv.org/3.4.0/opencv.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        canvas {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <h2>Image Matching with OpenCV.js</h2>
+    <input type="file" id="image1" />
+    <input type="file" id="image2" />
+    <button onclick="matchImages()">Match Images</button>
+    <canvas id="canvasOutput" width="800" height="600"></canvas>
+
+    <script>
+        let imgElement1 = document.getElementById('image1');
+        let imgElement2 = document.getElementById('image2');
+        let canvas = document.getElementById('canvasOutput');
+        let ctx = canvas.getContext('2d');
+
+        function matchImages() {
+            if (imgElement1.files.length === 0 || imgElement2.files.length === 0) {
+                alert('Please select both images.');
+                return;
+            }
+
+            let img1 = new Image();
+            let img2 = new Image();
+
+            img1.onload = () => {
+                img2.onload = () => {
+                    processImages(img1, img2);
+                };
+                img2.src = URL.createObjectURL(imgElement2.files[0]);
+            };
+            img1.src = URL.createObjectURL(imgElement1.files[0]);
+        }
+
+        function processImages(img1, img2) {
+            let src1 = cv.imread(img1);
+            let src2 = cv.imread(img2);
+            let gray1 = new cv.Mat();
+            let gray2 = new cv.Mat();
+
+            cv.cvtColor(src1, gray1, cv.COLOR_RGBA2GRAY, 0);
+            cv.cvtColor(src2, gray2, cv.COLOR_RGBA2GRAY, 0);
+
+            let orb = new cv.ORB();
+            let keypoints1 = new cv.KeyPointVector();
+            let keypoints2 = new cv.KeyPointVector();
+            let descriptors1 = new cv.Mat();
+            let descriptors2 = new cv.Mat();
+
+            orb.detectAndCompute(gray1, new cv.Mat(), keypoints1, descriptors1);
+            orb.detectAndCompute(gray2, new cv.Mat(), keypoints2, descriptors2);
+
+            let bf = new cv.BFMatcher(cv.NORM_HAMMING, true);
+            let matches = new cv.DMatchVector();
+            bf.match(descriptors1, descriptors2, matches);
+
+            let result = new cv.Mat();
+            cv.drawMatches(src1, keypoints1, src2, keypoints2, matches, result);
+
+            cv.imshow('canvasOutput', result);
+
+            src1.delete();
+            src2.delete();
+            gray1.delete();
+            gray2.delete();
+            keypoints1.delete();
+            keypoints2.delete();
+            descriptors1.delete();
+            descriptors2.delete();
+            matches.delete();
+            orb.delete();
+            bf.delete();
+            result.delete();
+        }
+    </script>
+</body>
+</html>

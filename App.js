@@ -6,6 +6,11 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator,TransitionSpecs, CardStyleInterpolators  } from '@react-navigation/stack';
 
 import PageTransition from "./SmartSearch/controller/PageTransitionController";
+import SmartSearch from "./SmartSearch/routes/searchpage";
+import Patp from "./SmartSearch/Test/Test";
+import WalletFound from "./SmartSearch/routes/search";
+import NAApp from "./SmartSearch/Test/Filejam copy";
+import MaApp from "./SmartSearch/controller/matchcontroller";
 
 
 
